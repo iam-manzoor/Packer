@@ -116,21 +116,7 @@ sudo ufw allow https
        "ami_name": "my-first-ami",
        "source_ami":  "ami-123456789",
        "instance_type": "<instance_size>"  #Temporary instance deployed by packer to configure the source image and create AMI from it
-    },
-    {
-      "type": "azure-rm",
-      "client_secret": <>,
-      "client_id": <>,
-      "subscription_id": <>,
-
-      "image_publisher": <>,
-      "image_offer": <>,
-      "image_sku": <>,
-
-      "location": "East US",
-      "os_type": "Linux",
-      "managed_image_name": "Ubunut-nginx-projects",
-      "managed_image_resource_gruop_name": "packer-rg"
+    }
   ],
   "provisioners": [
      {
@@ -148,4 +134,52 @@ sudo ufw allow https
      }
   ]
 }
+```
+
+### Multiple Builders
+{
+  "builders": [
+    {
+       "type": "amazon-ebs",  # AWS
+       "access_key": "<Access-key>",
+       "secret_key": "<sec_key>",
+       "region": "us-east-1",
+       "ami_name": "my-first-ami",
+       "source_ami":  "ami-123456789",
+       "instance_type": "<instance_size>"  #Temporary instance deployed by packer to configure the source image and create AMI from it
+    },
+    {
+      "type": "azure-rm",
+      "client_secret": <>,
+      "client_id": <>,
+      "subscription_id": <>,
+
+      "image_publisher": <>,
+      "image_offer": <>,
+      "image_sku": <>,
+
+      "location": "East US",
+      "os_type": "Linux",
+      "managed_image_name": "Ubunut-nginx-projects",
+      "managed_image_resource_gruop_name": "packer-rg"
+    }
+  ],
+  "provisioners": [
+     {
+       "type": "shell",
+       "script": "setup.sh"
+     },
+     {
+       "type": "file",
+       "source": "index.html",
+       "destination": "/tmp/" # Can not copy directly to /var/www/html/ permission issue
+     },
+     {
+       "type": "shell",
+       "inline": ["sudo cp /tmp/index.html /var/www/html/"]
+     }
+  ]
+}
+# Run packer command
+packer build -only=amazon-ebs,azure-rm <file-name>
 ```
