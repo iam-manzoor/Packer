@@ -137,6 +137,7 @@ sudo ufw allow https
 ```
 
 ### Multiple Builders
+```
 {
   "builders": [
     {
@@ -180,6 +181,7 @@ sudo ufw allow https
      }
   ]
 }
-# Run packer command
+```
+# Run the Packer command
 packer build -only=amazon-ebs,azure-rm <file-name>
 ```
