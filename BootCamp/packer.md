@@ -8,7 +8,7 @@
   - 
 
 # Installation
-- Provide packer installation URL
+- https://developer.hashicorp.com/packer/downloads?product_intent=packer
   -
 
 # Packer Basic
