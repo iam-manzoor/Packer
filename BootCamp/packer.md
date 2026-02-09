@@ -28,11 +28,13 @@
   - `locals` Gets calculated and stored in a variable. Can not be accessed outside of templates.
   
 - Builders:
-  - amazon-ebs
-  - amazon-ebssurrogate
-  - amazon-ebsvolume
-  - amazon-instance
--
+  - amazon-ebs: Creates EBS backed AMI instances
+  - amazon-ebssurrogate: Creates EBS-backed AMI from an existig instance as base.
+  - amazon-ebsvolume: Creates EBS volume with data from a custom build process
+  - amazon-instance: Creates instance store backed AMI.
+
+- Source: What is the source for the AMI which we are going to build.
+  - 
 -
 
 ## CI/CD
