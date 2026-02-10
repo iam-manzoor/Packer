@@ -1,0 +1,17 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - wget https://releases.hashicorp.com/packer/1.15.0/packer_1.15.0_linux_amd64.zip
+      - unzip packer_1.15.0_linux_amd64.zip
+  pre_build:
+    commands:
+      - export PATH=$PATH:.
+      - ./packer validate ami-builder.pkr.hcl
+  build:
+    commands:
+      - ./packer build ami-builder.pkr.hcl
+  post_build:
+    commands:
+      - 'export AMI_ID=$(./packer inspect -machine-readable ami-builder.pkr.hcl | grep "artifact,0,id" | cut -d: -f2)'
+      - echo $AMI_ID
