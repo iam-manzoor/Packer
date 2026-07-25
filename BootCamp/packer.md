@@ -3,7 +3,7 @@
 - Platforms and Builders: (Build AMI)
   - Supports AWS, GCP, Azure, VirtualBox, Docker
 - Provisioners: (Supports installing and Uninstalling packages with in AMI)
-  - Shell, ANsible, Puppet, Chef.
+  - Shell, Ansible, Puppet, Chef.
 - Post-processors: (To be done after the Image is built)
   - 
 
