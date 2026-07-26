@@ -101,6 +101,30 @@ packer build -var-file=variables.pkrvars.hcl aws-ubuntu.pkr.hcl
 
 Update `ami_id` in `variables.pkrvars.hcl` before building if you want to use a different Ubuntu image.
 
+## Build with AWS CodeBuild
+
+[`buildspec.yaml`](Exercise/Packer_Tutorial/01-Simple-Example/buildspec.yaml) is an AWS CodeBuild instruction file. It lets a CI/CD pipeline run the same Packer workflow automatically instead of building an AMI from a local machine.
+
+```mermaid
+flowchart LR
+    A[Source repository] --> B[AWS CodeBuild]
+    B --> C[Install Packer]
+    C --> D[Validate template]
+    D --> E[Build custom AMI]
+    E --> F[Deploy or promote the AMI]
+```
+
+The file is organized into four phases:
+
+| Phase | What it does |
+| --- | --- |
+| `install` | Downloads and unpacks Packer in the CodeBuild environment. |
+| `pre_build` | Makes Packer available on the command path and validates the template. |
+| `build` | Runs Packer to create the AMI. |
+| `post_build` | Attempts to capture and print the resulting AMI ID for later pipeline steps. |
+
+Before using this build specification, update it to reference this repository’s template, `aws-ubuntu.pkr.hcl`, rather than `ami-builder.pkr.hcl`. Add `./packer init .` before validation as well, so CodeBuild installs the required Amazon plugin. The CodeBuild service role also needs AWS permissions to create the temporary EC2 resources and register the AMI.
+
 ## Useful commands
 
 ```bash
