@@ -29,7 +29,7 @@
 
 
 ### What are provisioners?
-** Provisioners are decleared under the build block.**
+**Provisioners are decleared under the build block.**
 - Provisioners are used to install software, copy files, and configure the machine after the base image is created. 
 - Common types include:
   - shell   : runs shell commands or scripts
