@@ -10,6 +10,13 @@ Configuring servers by hand works for one machine, but it becomes unreliable as 
 
 Packer supports an immutable-infrastructure workflow: define the desired server once, build an image, and deploy consistent copies of that image whenever they are needed.
 
+### Mutable vs. immutable infrastructure
+
+| Approach | How it works | Trade-off |
+| --- | --- | --- |
+| Mutable infrastructure | Deploy a server first, then patch it, install packages, update firewall rules, and copy application files. | Changes can accumulate differently on each server over time. |
+| Immutable infrastructure | Configure the server during image creation, then deploy new instances from that versioned image. | Replacements are predictable and every instance starts from the same baseline. |
+
 ```mermaid
 flowchart LR
     A[Ubuntu base AMI] --> B[Packer template]
@@ -38,10 +45,10 @@ flowchart LR
     │   ├── aws-ubuntu.pkr.hcl          # Fixed-value Packer template
     │   ├── scripts/setup.sh             # Installs and enables Nginx
     │   └── Files/index.html             # Page copied into the image
-    └── 02-variables/
-        ├── aws-ubuntu.pkr.hcl           # Template using var.ami_id
-        ├── variables.pkr.hcl            # Variable declaration
-        ├── variables.pkrvars.hcl        # Variable value
+    └── 02-variables-Example/
+        ├── aws-ubuntu.pkr.hcl           # Template with a filtered Ubuntu source AMI
+        ├── variables.pkr.hcl            # Variable declarations
+        ├── variables.pkrvars.hcl        # Build-specific variable values
         ├── scripts/setup.sh
         └── Files/index.html
 ```
@@ -90,16 +97,16 @@ When the build finishes, find the new AMI in the EC2 console and launch an insta
 
 ## Run the variables example
 
-The second exercise moves the source AMI ID out of the main template. This is helpful when the same configuration needs different values for regions or environments.
+The second exercise makes the template reusable across environments. It accepts values for the AMI name, instance type, AWS region, and SSH username through `variables.pkrvars.hcl`. Rather than pinning a source AMI ID, it selects the most recent Canonical Ubuntu 22.04 image that matches the configured filter.
 
 ```bash
-cd Exercise/Packer_Tutorial/02-variables
+cd Exercise/Packer_Tutorial/02-variables-Example
 packer init .
 packer validate -var-file=variables.pkrvars.hcl .
 packer build -var-file=variables.pkrvars.hcl aws-ubuntu.pkr.hcl
 ```
 
-Update `ami_id` in `variables.pkrvars.hcl` before building if you want to use a different Ubuntu image.
+Update the values in `variables.pkrvars.hcl` to create an image for another region, use a different builder instance type, or give the AMI a meaningful name.
 
 ## Build with AWS CodeBuild
 
@@ -140,7 +147,7 @@ PACKER_LOG=1 packer build aws-ubuntu.pkr.hcl
 
 ## Next steps
 
-- Replace the hard-coded settings with variables for region, instance type, and AMI name.
+- Customize the existing variable values for the region, instance type, AMI name, and SSH user to suit each environment.
 - Add automated image checks before promoting an AMI.
 - Use the resulting AMI in a launch template, Auto Scaling group, or infrastructure-as-code workflow.
 - Explore additional provisioners such as Ansible when the server configuration grows.
