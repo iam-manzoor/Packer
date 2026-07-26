@@ -14,23 +14,26 @@
 ### What is a plugin?
 - A plugin extends Packer with support for specific builders such as Amazon AWS,
 - Docker, VMware, or Azure. We need plugins to connect Packer with the platform we want to build for.
+- Example refer to the code
 
 ### What is a source?
 - A source defines the base image or builder configuration, such as an Amazon AMI source.
 - It tells Packer where the image should come from and how to create it.
+- Example refer to the code
 
 ### What is a build?
 - A build is the process of creating an image using one or more sources and steps.
 - It is the main action that runs the image creation workflow.
 - Are responsible for creating machines and generating images from them for various platforms.
+- Example refer to the code
 
 
 ### What are provisioners?
-- They are decleared under the build block.
+- ** Provisioners are decleared under the build block.**
 - Provisioners are used to install software, copy files, and configure the machine after the base image is created. 
 - Common types include:
   - shell   : runs shell commands or scripts
   - file    : copies files into the image
   - ansible : configures the machine using Ansible playbooks
   - inline  : Type of shell provisioner that executes an array of raw, inline commands directly on the remote instance instead of uploading a separate script file
-
+- Example refer to the code
